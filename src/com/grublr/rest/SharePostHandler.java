@@ -17,7 +17,7 @@ public class SharePostHandler {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String sayHtmlHello() {
-        return "<html> " + "<title>" + "Hello test" + "</title>"
+        return "<html> " + "<title>" + "Hello Jersey" + "</title>"
                 + "<body><h1>" + "Hello Jersey" + "</body></h1>" + "</html> ";
     }
 
