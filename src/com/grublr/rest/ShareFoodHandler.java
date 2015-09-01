@@ -1,8 +1,11 @@
 package com.grublr.rest;
 
 import com.google.appengine.labs.repackaged.com.google.common.io.ByteStreams;
+import com.google.appengine.repackaged.org.codehaus.jackson.JsonNode;
+import com.google.appengine.repackaged.org.codehaus.jackson.map.ObjectMapper;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
-import com.grublr.core.PhotoUploader;
+import com.grublr.core.DataStoreHandler;
+import com.grublr.core.PhotoHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
@@ -24,6 +27,7 @@ public class ShareFoodHandler {
 
     private static final String BUCKET_NAME = "grublr-0831.appspot.com";
     private static final String STORAGE_API_URL = "https://storage.googleapis.com/";
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -37,20 +41,29 @@ public class ShareFoodHandler {
     @Produces(MediaType.TEXT_HTML)
     public Response postFood(@FormDataParam("metadata") String metadata, @FormDataParam("file") InputStream image,
                              @FormDataParam("file") FormDataContentDisposition contentDisposition) {
+        JsonNode entityObj = stringToJson(metadata);
         //Store foto in cloud storage
-        GcsFilename fileName = new GcsFilename(BUCKET_NAME, metadata);
+        String name = entityObj.get("name").getTextValue();
+        GcsFilename fileName = new GcsFilename(BUCKET_NAME, name + Math.random());
         try {
-            PhotoUploader.getInstance().writeToFile(fileName, ByteStreams.toByteArray(image));
-
+            PhotoHandler.getInstance().writeToFile(fileName, ByteStreams.toByteArray(image));
             // Store metadata in data store
-
-
-            //return url
             String url = STORAGE_API_URL + BUCKET_NAME + metadata;
+            DataStoreHandler.getInstance().put(entityObj, url);
+            //return url
             return Response.status(200).entity(url).build();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return Response.status(500).build();
+    }
+
+    private JsonNode stringToJson(String str) {
+        try {
+            return mapper.readTree(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

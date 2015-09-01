@@ -13,13 +13,13 @@ import java.nio.ByteBuffer;
 /**
  * Created by adi on 8/31/15.
  */
-public class PhotoUploader {
+public class PhotoHandler {
 
-    private PhotoUploader() {
+    private PhotoHandler() {
 
     }
 
-    private static PhotoUploader instance;
+    private static PhotoHandler instance;
 
     /**
      * This is the service from which all requests are initiated.
@@ -27,9 +27,9 @@ public class PhotoUploader {
      */
     private static final GcsService gcsService = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
 
-    public static final PhotoUploader getInstance() {
+    public static final PhotoHandler getInstance() {
         if(instance ==  null) {
-            instance = new PhotoUploader();
+            instance = new PhotoHandler();
         }
         return instance;
     }
