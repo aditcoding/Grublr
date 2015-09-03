@@ -1,15 +1,14 @@
 package com.grublr.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.common.io.ByteStreams;
 import com.grublr.Util.Constants;
 import com.grublr.Util.Utils;
-import com.grublr.core.DataStoreHandler;
-import com.grublr.core.PhotoHandler;
+import com.grublr.core.DataHandlerFactory;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -38,16 +37,14 @@ public class FoodHandler {
         JsonNode entityObj = Utils.stringToJson(metadata);
         //Store photo in cloud storage
         String name = entityObj.get(Constants.NAME).asText() + Math.random();
-        GcsFilename fileName = new GcsFilename(Constants.BUCKET_NAME, name);
         try {
-            PhotoHandler.getInstance().writeToFile(fileName, ByteStreams.toByteArray(image));
+            DataHandlerFactory.getDefaultPhotoHandler().writePhoto(name, ByteStreams.toByteArray(image));
             // Store metadata in data store
-            String url = Constants.STORAGE_API_URL + Constants.BUCKET_NAME + "/" + name;
-            DataStoreHandler.getInstance().put(entityObj, url, name);
+            DataHandlerFactory.getDefaultDataStoreHandler().writeData(name,entityObj);
             //return url
-            return Response.ok().header("url", url).build();
+            return Response.ok().build();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.severe(e.getCause() + e.getMessage() + e.toString());
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
@@ -60,12 +57,14 @@ public class FoodHandler {
         Response ret = Response.ok().build();
         try {
             JsonNode locationObj = Utils.stringToJson(location);
-            List<JsonNode> posts = DataStoreHandler.getInstance().getPosts(locationObj);
+            List<JsonNode> posts = DataHandlerFactory.getDefaultDataStoreHandler().readData(locationObj);
+            if(posts.isEmpty()) {
+                if(log.isLoggable(Level.INFO)) log.info("No posts to show");
+            }
             //Getting images
             for (JsonNode post : posts) {
                 String fileName = post.get(Constants.NAME).asText();
-                GcsFilename gcsFilename = new GcsFilename(Constants.BUCKET_NAME, fileName);
-                final byte [] image = PhotoHandler.getInstance().readFromFile(gcsFilename);
+                final byte [] image = DataHandlerFactory.getDefaultPhotoHandler().readPhoto(fileName);
                 StreamingOutput stream = new StreamingOutput() {
                     public void write(OutputStream out)  {
                         try {
@@ -83,7 +82,7 @@ public class FoodHandler {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.severe(e.getCause() + e.getMessage() + e.toString());
             ret = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return Response.fromResponse(ret).build();

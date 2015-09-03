@@ -17,7 +17,10 @@ public class Constants {
     public static final double searchRadiusInMeters = 1000*1000;
 
     //Google Cloud Platform Constants
-    public static final String BUCKET_NAME = "grublr-0831.appspot.com";
-    public static final String STORAGE_API_URL = "https://storage.googleapis.com/";
+    public static final String GCS_BUCKET_NAME = "grublr-0831.appspot.com";
+    public static final String GCS_API_URL = "https://storage.googleapis.com/";
+
+    //App constants
+    public static final String APP_PROPERTIES = "app.properties";
 
 }
