@@ -6,15 +6,18 @@ package com.grublr.Util;
 public class Constants {
 
     // Metadata Constants
-    private static final String LOCATION = "location";
-    private static final String NAME = "name";
-    private static final String URL = "url";
-    private static final String ENTITY_KIND = "Metadata";
-    private static final String LATITUDE = "lat";
-    private static final String LONGITUDE = "long";
+    public static final String LOCATION = "location";
+    public static final String NAME = "name";
+    public static final String URL = "url";
+    public static final String ENTITY_KIND = "Metadata";
+    public static final String LATITUDE = "lat";
+    public static final String LONGITUDE = "long";
+    public static final String METADATA = "metadata";
+    public static final String FILE = "file";
+    public static final double searchRadiusInMeters = 1000*1000;
 
     //Google Cloud Platform Constants
-    private static final String BUCKET_NAME = "grublr-0831.appspot.com";
-    private static final String STORAGE_API_URL = "https://storage.googleapis.com/";
+    public static final String BUCKET_NAME = "grublr-0831.appspot.com";
+    public static final String STORAGE_API_URL = "https://storage.googleapis.com/";
 
 }

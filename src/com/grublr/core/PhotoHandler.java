@@ -9,11 +9,15 @@ import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by adi on 8/31/15.
  */
 public class PhotoHandler {
+
+    private static final Logger log = Logger.getLogger(PhotoHandler.class.getName());
 
     private PhotoHandler() {
 
@@ -42,11 +46,14 @@ public class PhotoHandler {
      * need to worry about cleaning up partly written files)
      */
     public void writeToFile(GcsFilename fileName, byte[] content) throws IOException {
+        long begin = System.currentTimeMillis();
+        if(log.isLoggable(Level.INFO)) log.info("Storing image");
         @SuppressWarnings("resource")
         GcsOutputChannel outputChannel =
                 gcsService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
         outputChannel.write(ByteBuffer.wrap(content));
         outputChannel.close();
+        if(log.isLoggable(Level.INFO)) log.info("Stored image and time taken: " + (System.currentTimeMillis()-begin));
     }
 
     /**
@@ -59,11 +66,16 @@ public class PhotoHandler {
      * prefetchingReadChannel and processed incrementally.
      */
     public byte[] readFromFile(GcsFilename fileName) throws IOException {
+        long begin = System.currentTimeMillis();
+        if(log.isLoggable(Level.INFO)) log.info("Reading image");
         int fileSize = (int) gcsService.getMetadata(fileName).getLength();
         ByteBuffer result = ByteBuffer.allocate(fileSize);
         try (GcsInputChannel readChannel = gcsService.openReadChannel(fileName, 0)) {
             readChannel.read(result);
         }
+        if(log.isLoggable(Level.INFO)) log.info("Read image and time taken: " + (System.currentTimeMillis()-begin));
         return result.array();
+
     }
+
 }
