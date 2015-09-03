@@ -81,12 +81,25 @@ public class DataStoreHandler {
             float longitude = location.get(Constants.LONGITUDE).floatValue();
             GeoPt center = new GeoPt(latitude, longitude);
             if(log.isLoggable(Level.FINER)) log.finer("GeoPt: " + center.toString());
-            Query.Filter geoSpatialFilter = new Query.StContainsFilter(Constants.LOCATION, new Query.GeoRegion.Circle(center, Constants.searchRadiusInMeters));
+            /*Query.Filter geoSpatialFilter = new Query.StContainsFilter(Constants.LOCATION, new Query.GeoRegion.Circle(center, Constants.searchRadiusInMeters));
             Query query = new Query(Constants.ENTITY_KIND).setFilter(geoSpatialFilter);
             if(log.isLoggable(Level.FINER)) log.finer("Query: " +  query.toString());
             //Execute query
             if(log.isLoggable(Level.FINER)) log.finer(" Executing Query...");
+            PreparedQuery pq = datastore.prepare(query);*/
+
+
+
+            /*Entity campingPhoto = new Entity("Photo");
+            campingPhoto.setProperty("imageURL",
+                    "http://domain.com/some/path/to/camping_photo.jpg");*/
+            //datastore.put(photoList);
+
+            Query query =  new Query();
             PreparedQuery pq = datastore.prepare(query);
+
+
+
             if(log.isLoggable(Level.FINER)) log.finer(" Executed Query...");
             if(log.isLoggable(Level.FINE)) log.fine("Result set size : " + pq.countEntities());
             if(log.isLoggable(Level.FINER)) log.finer(" Looping through results");
