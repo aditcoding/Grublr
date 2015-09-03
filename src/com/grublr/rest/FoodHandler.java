@@ -2,8 +2,8 @@ package com.grublr.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.ByteStreams;
-import com.grublr.Util.Constants;
-import com.grublr.Util.Utils;
+import com.grublr.util.Constants;
+import com.grublr.util.Utils;
 import com.grublr.core.DataHandlerFactory;
 import java.io.InputStream;
 import java.io.OutputStream;

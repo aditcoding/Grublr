@@ -1,4 +1,4 @@
-package com.grublr.Util;
+package com.grublr.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

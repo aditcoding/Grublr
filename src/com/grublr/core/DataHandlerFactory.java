@@ -1,7 +1,7 @@
 package com.grublr.core;
 
-import com.grublr.Util.Constants;
-import com.grublr.Util.Utils;
+import com.grublr.util.Constants;
+import com.grublr.util.Utils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 import java.util.logging.Logger;

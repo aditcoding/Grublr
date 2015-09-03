@@ -7,7 +7,7 @@ import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
-import com.grublr.Util.Constants;
+import com.grublr.util.Constants;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;

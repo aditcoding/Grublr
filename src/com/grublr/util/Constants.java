@@ -1,4 +1,4 @@
-package com.grublr.Util;
+package com.grublr.util;
 
 /**
  * Created by adi on 9/1/15.
